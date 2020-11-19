@@ -105,14 +105,17 @@ public class Board extends GridPane {
 	}
 	
 	public boolean checkStalemate() {
+		ArrayList<ArrayList<Move>> moves = new ArrayList<ArrayList<Move>>();
+		moves.add(getAllMoves(PlayerColor.WHITE));
+		moves.add(getAllMoves(PlayerColor.BLACK));
+		/*
 		PlayerColor turn;
 		if (Main.turns % 2 == 0) turn = PlayerColor.WHITE;
 		else turn = PlayerColor.BLACK;
-		ArrayList<Move> movesWhite = getAllMoves(PlayerColor.WHITE);
-		ArrayList<Move> movesBlack = getAllMoves(PlayerColor.BLACK);
+		*/
 		
-		if (movesA.size() == 0) return true;
-		for (Move move: movesA) {
+		if (moves.get((int) (Main.turns % 2)).size() == 0) return true;
+		for (Move move: moves.get((int) (Main.turns % 2))) {
 			if (squares[move.peek()[0]].getPiece().type == Pieces.KING) {
 				
 			}

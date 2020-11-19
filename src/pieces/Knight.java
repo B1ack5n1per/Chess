@@ -8,7 +8,7 @@ import javafx.scene.image.Image;
 public class Knight extends Piece {
 
 	public Knight(PlayerColor color) {
-		super(color);
+		super(color, Pieces.KNIGHT);
 		this.img = new Image("knight_" + color.toString().toLowerCase() + ".png");
 	}
 

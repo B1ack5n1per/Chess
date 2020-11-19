@@ -9,7 +9,7 @@ import main.Main;
 public class Pawn extends Piece {
 
 	public Pawn(PlayerColor color) {
-		super(color);
+		super(color, Pieces.PAWN);
 		this.img = new Image("pawn_" + color.toString().toLowerCase() + ".png");
 	}
 

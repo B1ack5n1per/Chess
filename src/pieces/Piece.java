@@ -12,9 +12,11 @@ public abstract class Piece {
 	protected HashSet<Integer> invalidMoves;
 	protected Image img;
 	public boolean moved = false;
+	public Pieces type;
 	
-	public Piece(PlayerColor color) {
+	public Piece(PlayerColor color, Pieces type) {
 		this.color = color;
+		this.type = type;
 		invalidMoves = new HashSet<Integer>();
 		for (int i = 0; i < 20; i++) invalidMoves.add(i);
 		for (int i = 100; i < 120; i++) invalidMoves.add(i);

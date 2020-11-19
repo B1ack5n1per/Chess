@@ -10,7 +10,7 @@ public class King extends Piece {
 	Rook left, right;
 
 	public King(PlayerColor color, Rook left, Rook right) {
-		super(color);
+		super(color, Pieces.KING);
 		this.img = new Image("king_" + color.toString().toLowerCase() + ".png");
 		this.left = left;
 		this.right = right;

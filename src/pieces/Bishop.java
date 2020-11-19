@@ -8,7 +8,7 @@ import javafx.scene.image.Image;
 public class Bishop extends Piece {
 
 	public Bishop(PlayerColor color) {
-		super(color);
+		super(color, Pieces.BISHOP);
 		this.img = new Image("bishop_" + color.toString().toLowerCase() + ".png");
 	}
 

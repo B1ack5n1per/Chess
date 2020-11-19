@@ -8,7 +8,7 @@ import javafx.scene.image.Image;
 public class Rook extends Piece {
 
 	public Rook(PlayerColor color) {
-		super(color);
+		super(color, Pieces.ROOK);
 		this.img = new Image("rook_" + color.toString().toLowerCase() + ".png");
 	}
 

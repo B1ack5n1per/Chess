@@ -1,6 +1,9 @@
 package chess;
 
+import java.util.ArrayList;
+
 import javafx.scene.layout.GridPane;
+import main.Main;
 import pieces.*;
 
 public class Board extends GridPane {
@@ -89,6 +92,39 @@ public class Board extends GridPane {
 	}
 	
 	public PlayerColor testCheckmate() {
+		PlayerColor turn;
+		if (Main.turns % 2 == 0) turn = PlayerColor.WHITE;
+		else turn = PlayerColor.BLACK;
+		if (testCheck() != turn) return PlayerColor.NULL;
+		
+		ArrayList<Move> moves = getAllMoves(turn);
+		for(Move move: moves) {
+			
+		}
 		return PlayerColor.NULL;
+	}
+	
+	public boolean checkStalemate() {
+		PlayerColor turn;
+		if (Main.turns % 2 == 0) turn = PlayerColor.WHITE;
+		else turn = PlayerColor.BLACK;
+		ArrayList<Move> movesWhite = getAllMoves(PlayerColor.WHITE);
+		ArrayList<Move> movesBlack = getAllMoves(PlayerColor.BLACK);
+		
+		if (movesA.size() == 0) return true;
+		for (Move move: movesA) {
+			if (squares[move.peek()[0]].getPiece().type == Pieces.KING) {
+				
+			}
+		}
+		return false;
+	}
+	
+	private ArrayList<Move> getAllMoves(PlayerColor color) {
+		ArrayList<Move> allMoves = new ArrayList<Move>();
+		for (int i = 0; i < squares.length; i++) 
+			if (squares[i].getPiece() != null && squares[i].getPiece().color == color)
+				for(Move move: squares[i].getPiece().getMoves(i)) allMoves.add(move);
+		return allMoves;
 	}
 }

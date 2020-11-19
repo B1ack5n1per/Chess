@@ -42,6 +42,7 @@ public class Main extends Application {
 			} else {
 				for (Move move: moves) if (move.peek()[1] == index) move.preform();
 				board.clear();
+				System.out.println(board.checkStalemate());
 			}
 			
 		});

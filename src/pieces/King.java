@@ -18,22 +18,24 @@ public class King extends Piece {
 
 	@Override
 	public ArrayList<Move> getMoves(int index) {
-		ArrayList<Move> moves = new ArrayList<Move>();
+		ArrayList<Move> initialMoves = new ArrayList<Move>(), validMoves = new ArrayList<Move>();
 		
-		if (checkMove(index - 11)) moves.add(new Move(index, index - 11));
-		if (checkMove(index - 10)) moves.add(new Move(index, index - 10));
-		if (checkMove(index - 9)) moves.add(new Move(index, index - 9));
-		if (checkMove(index - 1)) moves.add(new Move(index, index - 1));
-		if (checkMove(index + 1)) moves.add(new Move(index, index + 1));
-		if (checkMove(index + 9)) moves.add(new Move(index, index + 9));
-		if (checkMove(index + 10)) moves.add(new Move(index, index + 10));
-		if (checkMove(index + 11)) moves.add(new Move(index, index + 11));
+		if (checkMove(index - 11)) initialMoves.add(new Move(index, index - 11));
+		if (checkMove(index - 10)) initialMoves.add(new Move(index, index - 10));
+		if (checkMove(index - 9)) initialMoves.add(new Move(index, index - 9));
+		if (checkMove(index - 1)) initialMoves.add(new Move(index, index - 1));
+		if (checkMove(index + 1)) initialMoves.add(new Move(index, index + 1));
+		if (checkMove(index + 9)) initialMoves.add(new Move(index, index + 9));
+		if (checkMove(index + 10)) initialMoves.add(new Move(index, index + 10));
+		if (checkMove(index + 11)) initialMoves.add(new Move(index, index + 11));
 		
 		if (!moved) {
-			if (!left.moved && checkMoveBlocked(index - 1) && checkMoveBlocked(index - 2) && checkMoveBlocked(index - 3)) moves.add(new Move(index, index - 2, index - 4, index - 1));
-			if (!right.moved && checkMoveBlocked(index + 1) && checkMoveBlocked(index + 2)) moves.add(new Move(index, index + 2, index + 3, index + 1));
+			if (!left.moved && checkMoveBlocked(index - 1) && checkMoveBlocked(index - 2) && checkMoveBlocked(index - 3)) initialMoves.add(new Move(index, index - 2, index - 4, index - 1));
+			if (!right.moved && checkMoveBlocked(index + 1) && checkMoveBlocked(index + 2)) initialMoves.add(new Move(index, index + 2, index + 3, index + 1));
 		}
 		
-		return moves;
+		
+		
+		return validMoves;
 	}
 }

@@ -1,13 +1,17 @@
 package chess;
 
 import java.util.ArrayList;
+import java.util.Stack;
 
 import javafx.scene.layout.GridPane;
 import main.Main;
 import pieces.*;
 
 public class Board extends GridPane {
+	
 	private Square[] squares = new Square[120];
+	private ArrayList<Move> moves = new ArrayList<Move>();
+	private Stack<State> saves = new Stack<State>();
 	
 	public Board() {
 		
@@ -97,10 +101,10 @@ public class Board extends GridPane {
 		else turn = PlayerColor.BLACK;
 		if (testCheck() != turn) return PlayerColor.NULL;
 		
-		ArrayList<Move> moves = getAllMoves(turn);
+		/*ArrayList<Move> moves = getAllMoves(turn);
 		for(Move move: moves) {
 			
-		}
+		}*/
 		return PlayerColor.NULL;
 	}
 	
@@ -129,5 +133,42 @@ public class Board extends GridPane {
 			if (squares[i].getPiece() != null && squares[i].getPiece().color == color)
 				for(Move move: squares[i].getPiece().getMoves(i)) allMoves.add(move);
 		return allMoves;
+	}
+	
+	public void save() {
+		Square[] backup = new Square[squares.length];
+		for (int i = 0; i < squares.length; i++) backup[i] = squares[i];
+		saves.push(new State(backup, Main.turns));
+	}
+	
+	public void revert() {
+		State state = saves.pop();
+		squares = state.squares;
+		Main.turns = state.turns;
+	}
+	
+	public void update(int index) {
+		Square target = getSquare(index);
+		
+		if (!target.highlighted) {
+			clear();
+			if (target.getPiece() != null && Main.turns % 2 == target.getPiece().color.mod) {
+				target.select();
+				moves = target.getPiece().getMoves(index);
+				for (Move move: moves) getSquare(move.peek()[1]).setHighlighted(true);
+			}
+		} else {
+			for (Move move: moves) if (move.peek()[1] == index) move.preform();
+			clear();
+			checkStalemate();
+		}
+	}
+	
+	public boolean testForIndexViolation(int index) {
+		for (int i = 0; i < squares.length; i++) {
+			update(i);
+			if (moves.get(0).peek()[1] == index) return true;
+		}
+		return false;
 	}
 }

@@ -77,4 +77,18 @@ public class Board extends GridPane {
 	public void clear() {
 		for (int i = 0; i < squares.length; i++) squares[i].setHighlighted(false);
 	}
+	
+	public void move(int start, int end) {
+		squares[end].setPiece(squares[start].getPiece());
+		squares[end].getPiece().moved = true;
+		squares[start].removePiece();
+	}
+	
+	public PlayerColor testCheck() {
+		return PlayerColor.NULL;
+	}
+	
+	public PlayerColor testCheckmate() {
+		return PlayerColor.NULL;
+	}
 }

@@ -8,7 +8,7 @@ import javafx.scene.image.Image;
 import main.Main;
 
 public abstract class Piece {
-	protected PlayerColor color;
+	public PlayerColor color;
 	protected HashSet<Integer> invalidMoves;
 	protected Image img;
 	public boolean moved = false;

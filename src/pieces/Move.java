@@ -1,17 +1,23 @@
 package pieces;
 
-import java.util.ArrayList;
+import java.util.Stack;
 
-public class Move extends ArrayList<int[]>{
+import main.Main;
+
+public class Move extends Stack<int[]>{
 	private static final long serialVersionUID = 1L;
 	
 	public Move(int... id) {
 		super();
 		
-		for (int i = 0; i < id.length; i += 2) add(new int[] {id[i], id[i + 1]});
+		for (int i = id.length - 1; i >= 0; i -= 2) this.push(new int[] {id[i - 1], id[i]});
 	}
 	
 	public void preform() {
-		
+		Main.turns++;
+		while(!this.empty()) {
+			int[] move = this.pop();
+			Main.board.move(move[0], move[1]);
+		}
 	}
 }

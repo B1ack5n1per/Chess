@@ -24,7 +24,46 @@ public class Board extends GridPane {
 			this.add(squares[i], i % 10 - 1, (int) (Math.floor(i / 10) - 1));
 		}
 		
-		squares[74].setPiece(new Pawn(PlayerColor.WHITE));
+		Rook blackLeft = new Rook(PlayerColor.BLACK);
+		Rook blackRight = new Rook(PlayerColor.BLACK);
+		Rook whiteLeft = new Rook(PlayerColor.WHITE);
+		Rook whiteRight = new Rook(PlayerColor.WHITE);
+		
+		// Black Pieces
+		squares[21].setPiece(blackLeft);
+		squares[22].setPiece(new Knight(PlayerColor.BLACK));
+		squares[23].setPiece(new Bishop(PlayerColor.BLACK));
+		squares[24].setPiece(new Queen(PlayerColor.BLACK));
+		squares[25].setPiece(new King(PlayerColor.BLACK, whiteLeft, whiteRight));
+		squares[26].setPiece(new Bishop(PlayerColor.BLACK));
+		squares[27].setPiece(new Knight(PlayerColor.BLACK));
+		squares[28].setPiece(blackRight);
+		squares[31].setPiece(new Pawn(PlayerColor.BLACK));
+		squares[32].setPiece(new Pawn(PlayerColor.BLACK));
+		squares[33].setPiece(new Pawn(PlayerColor.BLACK));
+		squares[34].setPiece(new Pawn(PlayerColor.BLACK));
+		squares[35].setPiece(new Pawn(PlayerColor.BLACK));
+		squares[36].setPiece(new Pawn(PlayerColor.BLACK));
+		squares[37].setPiece(new Pawn(PlayerColor.BLACK));
+		squares[38].setPiece(new Pawn(PlayerColor.BLACK));
+		
+		// White Pieces
+		squares[81].setPiece(new Pawn(PlayerColor.WHITE));
+		squares[82].setPiece(new Pawn(PlayerColor.WHITE));
+		squares[83].setPiece(new Pawn(PlayerColor.WHITE));
+		squares[84].setPiece(new Pawn(PlayerColor.WHITE));
+		squares[85].setPiece(new Pawn(PlayerColor.WHITE));
+		squares[86].setPiece(new Pawn(PlayerColor.WHITE));
+		squares[87].setPiece(new Pawn(PlayerColor.WHITE));
+		squares[88].setPiece(new Pawn(PlayerColor.WHITE));
+		squares[91].setPiece(whiteLeft);
+		squares[92].setPiece(new Knight(PlayerColor.WHITE));
+		squares[93].setPiece(new Bishop(PlayerColor.WHITE));
+		squares[94].setPiece(new Queen(PlayerColor.WHITE));
+		squares[95].setPiece(new King(PlayerColor.WHITE, whiteLeft, whiteRight));
+		squares[96].setPiece(new Bishop(PlayerColor.WHITE));
+		squares[97].setPiece(new Knight(PlayerColor.WHITE));
+		squares[98].setPiece(whiteRight);
 	}
 	
 	public Piece getPiece(int index) {

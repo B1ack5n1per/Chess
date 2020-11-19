@@ -3,11 +3,12 @@ package main;
 import java.util.ArrayList;
 
 import chess.Board;
-import chess.Piece;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import pieces.Move;
+import pieces.Piece;
 
 public class Main extends Application {
 	
@@ -36,8 +37,8 @@ public class Main extends Application {
 			Piece target = board.getPiece(10 * (y + 2) + x + 1);
 			if (target != null) {
 				board.getSquare(10 * (y + 2) + x + 1).select();
-				ArrayList<Integer> moves = target.getMoves(10 * (y + 2) + x + 1);
-				for (Integer move: moves) board.getSquare(move).setHighlighted(true);
+				ArrayList<Move> moves = target.getMoves(10 * (y + 2) + x + 1);
+				for (Move move: moves) board.getSquare(move.get(0)[1]).setHighlighted(true);
 			}
 		});
 		

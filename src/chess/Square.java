@@ -13,7 +13,7 @@ public class Square extends StackPane {
 	private Piece piece;
 	private ImageView img = new ImageView();
 	private SquareColor color = SquareColor.NULL;
-	public boolean highlighted = false;
+	public boolean highlighted = false, selected = false;
 	
 	public Square() {
 		img.setFitHeight(100);
@@ -33,12 +33,19 @@ public class Square extends StackPane {
 		setHighlighted(false);
 	}
 	
+	public Square clone() {
+		Square res = new Square(color);
+		res.setPiece(piece);
+		res.selected = selected;
+		return res;
+	}
+	
 	private void setColor(Color color) {
 		this.setBackground(new Background(new BackgroundFill(color, new CornerRadii(0), new Insets(0))));
 	}
 	
-	public void select() {
-		if (piece != null) setColor(Color.GREENYELLOW);
+	public void setSelected(boolean selected) {
+		this.selected = selected;
 	}
 	
 	public void setHighlighted(boolean highlighted) {
@@ -64,5 +71,6 @@ public class Square extends StackPane {
 	public void update() {
 		if (piece != null) img.setImage(piece.getImage());
 		else img.setImage(null);
+		if (piece != null && selected) setColor(Color.GREENYELLOW);
 	}
 }

@@ -11,7 +11,8 @@ public class Board extends GridPane {
 	
 	private Square[] squares = new Square[120];
 	private ArrayList<Move> moves = new ArrayList<Move>();
-	private Stack<State> saves = new Stack<State>();
+	private Stack<Move> saves = new Stack<Move>();
+	public PlayerColor inCheck = PlayerColor.NULL;
 	
 	public Board() {
 		
@@ -82,69 +83,63 @@ public class Board extends GridPane {
 	}
 	
 	public void clear() {
-		for (int i = 0; i < squares.length; i++) squares[i].setHighlighted(false);
+		for (int i = 0; i < squares.length; i++) {
+			squares[i].setHighlighted(false);
+			squares[i].setSelected(false);
+		}
 	}
 	
-	public void move(int start, int end) {
+	public void move(Move move, int start, int end) {
+		if (squares[end].getPiece() != null) move.taken = squares[end].getPiece();
 		squares[end].setPiece(squares[start].getPiece());
 		squares[end].getPiece().moved = true;
 		squares[start].removePiece();
+		saves.push(move);
 	}
 	
-	public PlayerColor testCheck() {
-		return PlayerColor.NULL;
+	public void undoMove(Move move, int start, int end) {
+		squares[end].setPiece(squares[start].getPiece());
+		squares[end].getPiece().moved = true;
+		squares[start].removePiece();
+		if (move.taken != null) squares[start].setPiece(move.taken);
+		Main.turns--;
 	}
 	
-	public PlayerColor testCheckmate() {
-		PlayerColor turn;
-		if (Main.turns % 2 == 0) turn = PlayerColor.WHITE;
-		else turn = PlayerColor.BLACK;
-		if (testCheck() != turn) return PlayerColor.NULL;
-		
-		/*ArrayList<Move> moves = getAllMoves(turn);
-		for(Move move: moves) {
-			
-		}*/
-		return PlayerColor.NULL;
-	}
-	
-	public boolean checkStalemate() {
-		ArrayList<ArrayList<Move>> moves = new ArrayList<ArrayList<Move>>();
-		moves.add(getAllMoves(PlayerColor.WHITE));
-		moves.add(getAllMoves(PlayerColor.BLACK));
-		/*
-		PlayerColor turn;
-		if (Main.turns % 2 == 0) turn = PlayerColor.WHITE;
-		else turn = PlayerColor.BLACK;
-		*/
-		
-		if (moves.get((int) (Main.turns % 2)).size() == 0) return true;
-		for (Move move: moves.get((int) (Main.turns % 2))) {
-			if (squares[move.peek()[0]].getPiece().type == Pieces.KING) {
-				
-			}
+	public boolean testCheck(PlayerColor turn) {
+		ArrayList<Move> enemyMoves = getAllMoves(turn.getEnemy());
+		for (Move move: enemyMoves) {
+			Piece piece = getPiece(move.getTarget());
+			if (piece != null && piece.type == Pieces.KING && piece.color == turn) return true;
 		}
 		return false;
 	}
 	
-	private ArrayList<Move> getAllMoves(PlayerColor color) {
+	public boolean testCheckmate(PlayerColor turn) {
+		if (testStalemate(turn) && testCheck(turn)) return true;
+		return false;
+	}
+	
+	public boolean testStalemate(PlayerColor turn) {
+		if (getAllMoves(turn).size() == 0) return true;
+		return false;
+	}
+	
+	public ArrayList<Move> getAllMoves(PlayerColor color, Pieces ... ignore) {
 		ArrayList<Move> allMoves = new ArrayList<Move>();
-		for (int i = 0; i < squares.length; i++) 
-			if (squares[i].getPiece() != null && squares[i].getPiece().color == color)
-				for(Move move: squares[i].getPiece().getMoves(i)) allMoves.add(move);
+		for (int i = 0; i < squares.length; i++)
+			if (squares[i].getPiece() != null && squares[i].getPiece().color == color) {
+				boolean skip = false;
+				for (Pieces piece: ignore) if (squares[i].getPiece().type == piece) skip = true;
+				if (!skip) for(Move move: squares[i].getPiece().getMoves(i)) allMoves.add(move);
+			}
+
 		return allMoves;
 	}
 	
-	public void save() {
-		Square[] backup = new Square[squares.length];
-		for (int i = 0; i < squares.length; i++) backup[i] = squares[i];
-		saves.push(new State(backup, Main.turns));
-	}
 	
-	public void revert() {
-		State state = saves.pop();
-		squares = state.squares;
-		Main.turns = state.turns;
+	public void restore() {
+		Move lastMove = saves.pop();
+		while(!lastMove.empty()) undoMove(lastMove, lastMove.peek()[1], lastMove.pop()[0]);
 	}
 	
 	public void update(int index) {
@@ -153,14 +148,30 @@ public class Board extends GridPane {
 		if (!target.highlighted) {
 			clear();
 			if (target.getPiece() != null && Main.turns % 2 == target.getPiece().color.mod) {
-				target.select();
+				target.setSelected(true);
 				moves = target.getPiece().getMoves(index);
-				for (Move move: moves) getSquare(move.peek()[1]).setHighlighted(true);
+				Piece piece = target.getPiece();
+				for (Move move: moves) {
+					if (piece.resolvesCheck(move)) {
+						getSquare(move.getTarget()).setHighlighted(true);
+					}
+				}
 			}
 		} else {
-			for (Move move: moves) if (move.peek()[1] == index) move.preform();
+			for (Move move: moves) if (move.getTarget() == index) move.preform();
 			clear();
-			checkStalemate();
+
+			PlayerColor turn;
+			if (Main.turns % 2 == 0) turn = PlayerColor.WHITE;
+			else turn = PlayerColor.BLACK;
+			
+			if (testCheck(turn)) inCheck = turn;
+			else if (testCheck(turn.getEnemy())) inCheck = turn.getEnemy();
+			else inCheck = PlayerColor.NULL;
+			
+			System.out.println("Stalemate: " + testStalemate(turn));
+			System.out.println("Check:" + testCheck(turn));
+			System.out.println("Checkmate" + testCheckmate(turn));
 		}
 	}
 	

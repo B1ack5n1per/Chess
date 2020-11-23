@@ -2,6 +2,7 @@ package pieces;
 
 import java.util.ArrayList;
 
+import chess.Move;
 import chess.PlayerColor;
 import javafx.scene.image.Image;
 import main.Main;

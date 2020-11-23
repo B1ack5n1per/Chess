@@ -8,4 +8,8 @@ public enum PlayerColor {
 		this.dir = dir;
 		this.mod = mod;
 	}
+	public PlayerColor getEnemy() {
+		if (this == WHITE) return BLACK;
+		return WHITE;
+	}
 }

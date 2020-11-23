@@ -2,8 +2,10 @@ package pieces;
 
 import java.util.ArrayList;
 
+import chess.Move;
 import chess.PlayerColor;
 import javafx.scene.image.Image;
+import main.Main;
 
 public class King extends Piece {
 	
@@ -34,7 +36,12 @@ public class King extends Piece {
 			if (!right.moved && checkMoveBlocked(index + 1) && checkMoveBlocked(index + 2)) initialMoves.add(new Move(index, index + 2, index + 3, index + 1));
 		}
 		
-		
+		for (Move move: initialMoves) {
+			move.clone().preform();
+			
+			if (this.resolvesCheck(move.clone())) validMoves.add(move);
+			Main.board.restore();
+		}
 		
 		return validMoves;
 	}

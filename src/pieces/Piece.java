@@ -3,6 +3,7 @@ package pieces;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import chess.Move;
 import chess.PlayerColor;
 import javafx.scene.image.Image;
 import main.Main;
@@ -45,12 +46,26 @@ public abstract class Piece {
 		while(!invalidMoves.contains(test)) {
 			Piece testPiece = Main.board.getPiece(test);
 			if (testPiece != null && testPiece.color == color) break;
-			out.add(new Move(index, test));
+			Move newMove = new Move(index, test);
+			out.add(newMove);
 			if (testPiece != null) break;
 			test += modifier;
 		}
 	}
 	
+	public boolean resolvesCheck(Move move) {
+		//if (Main.board.inCheck != color) return true;
+		move.clone().preform();
+		boolean inCheck = Main.board.testCheck(color);
+		Main.board.restore();
+		if (inCheck) return false;
+		return true;
+	}
+	
 	public abstract ArrayList<Move> getMoves(int index);
 	
+	@Override
+	public String toString() {
+		return "" + color + type;
+	}
 }

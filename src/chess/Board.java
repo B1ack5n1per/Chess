@@ -92,6 +92,7 @@ public class Board extends GridPane {
 	public void move(Move move, int start, int end) {
 		if (squares[end].getPiece() != null) move.taken = squares[end].getPiece();
 		squares[end].setPiece(squares[start].getPiece());
+		if (!squares[end].getPiece().moved) move.firstMove = true;
 		squares[end].getPiece().moved = true;
 		squares[start].removePiece();
 		saves.push(move);
@@ -102,6 +103,7 @@ public class Board extends GridPane {
 		squares[end].getPiece().moved = true;
 		squares[start].removePiece();
 		if (move.taken != null) squares[start].setPiece(move.taken);
+		if (move.firstMove) squares[end].getPiece().moved = false;
 		Main.turns--;
 	}
 	

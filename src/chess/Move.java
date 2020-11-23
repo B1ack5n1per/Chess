@@ -8,6 +8,7 @@ import pieces.Piece;
 public class Move extends Stack<int[]>{
 	private static final long serialVersionUID = 1L;
 	public Piece taken;
+	public boolean firstMove = false;
 	
 	public Move(int... id) {
 		super();

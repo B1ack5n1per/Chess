@@ -38,7 +38,7 @@ public class King extends Piece {
 		
 		for (Move move: initialMoves) {
 			if (this.resolvesCheck(move.clone())) validMoves.add(move);
-			Main.board.restore();
+
 		}
 		
 		return validMoves;

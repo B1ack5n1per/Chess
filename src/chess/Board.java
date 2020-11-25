@@ -98,7 +98,10 @@ public class Board extends GridPane {
 		saves.push(move);
 	}
 	
-	public void undoMove(Move move, int start, int end) {
+	public void undoMove() {
+		Move move = saves.pop();
+		int end = move.peek()[0];
+		int start = move.peek()[1];
 		squares[end].setPiece(squares[start].getPiece());
 		squares[end].getPiece().moved = true;
 		squares[start].removePiece();
@@ -107,8 +110,8 @@ public class Board extends GridPane {
 		Main.turns--;
 	}
 	
-	public boolean testCheck(PlayerColor turn) {
-		ArrayList<Move> enemyMoves = getAllMoves(turn.getEnemy());
+	public boolean testCheck(PlayerColor turn, Pieces ... ignore) {
+		ArrayList<Move> enemyMoves = getAllMoves(turn.getEnemy(), ignore);
 		for (Move move: enemyMoves) {
 			Piece piece = getPiece(move.getTarget());
 			if (piece != null && piece.type == Pieces.KING && piece.color == turn) return true;
@@ -122,7 +125,12 @@ public class Board extends GridPane {
 	}
 	
 	public boolean testStalemate(PlayerColor turn) {
-		if (getAllMoves(turn).size() == 0) return true;
+		ArrayList<Move> allMoves = getAllMoves(turn);
+		ArrayList<Move> validMoves = new ArrayList<Move>();
+		for (Move move: allMoves) {
+			if (getPiece(allMoves.get(0).peek()[0]).resolvesCheck(move)) validMoves.add(move);
+		}
+		if (validMoves.size() == 0) return true;
 		return false;
 	}
 	
@@ -138,39 +146,41 @@ public class Board extends GridPane {
 		return allMoves;
 	}
 	
-	
-	public void restore() {
-		Move lastMove = saves.pop();
-		while(!lastMove.empty()) undoMove(lastMove, lastMove.peek()[1], lastMove.pop()[0]);
-	}
-	
 	public void update(int index) {
 		Square target = getSquare(index);
 		
 		if (!target.highlighted) {
 			clear();
+			moves.clear();
 			if (target.getPiece() != null && Main.turns % 2 == target.getPiece().color.mod) {
 				target.setSelected(true);
-				moves = target.getPiece().getMoves(index);
+				ArrayList<Move> allMoves = target.getPiece().getMoves(index);
 				Piece piece = target.getPiece();
-				for (Move move: moves) {
+				for (Move move: allMoves) {
 					if (piece.resolvesCheck(move)) {
 						getSquare(move.getTarget()).setHighlighted(true);
+						moves.add(move);
 					}
 				}
 			}
 		} else {
-			for (Move move: moves) if (move.getTarget() == index) move.preform();
+			PlayerColor turn;
+			if (Main.turns % 2 == 1) turn = PlayerColor.WHITE;
+			else turn = PlayerColor.BLACK;
+			for (Move move: moves) {
+				if (move.getTarget() == index) {
+					move.preform();
+					break;
+				}
+			}
 			clear();
 
-			PlayerColor turn;
-			if (Main.turns % 2 == 0) turn = PlayerColor.WHITE;
-			else turn = PlayerColor.BLACK;
 			
 			if (testCheck(turn)) inCheck = turn;
 			else if (testCheck(turn.getEnemy())) inCheck = turn.getEnemy();
 			else inCheck = PlayerColor.NULL;
 			
+			System.out.println(Main.turns);
 			System.out.println("Stalemate: " + testStalemate(turn));
 			System.out.println("Check:" + testCheck(turn));
 			System.out.println("Checkmate" + testCheckmate(turn));

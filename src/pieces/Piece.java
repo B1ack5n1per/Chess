@@ -56,8 +56,8 @@ public abstract class Piece {
 	public boolean resolvesCheck(Move move) {
 		//if (Main.board.inCheck != color) return true;
 		move.clone().preform();
-		boolean inCheck = Main.board.testCheck(color);
-		Main.board.restore();
+		boolean inCheck = Main.board.testCheck(color, Pieces.KING);
+		Main.board.undoMove();
 		if (inCheck) return false;
 		return true;
 	}

@@ -19,9 +19,9 @@ public class Move extends Stack<int[]>{
 	public void preform() {
 		Main.turns++;
 		Move clone = this.clone();
-		while(!this.empty()) {
-			int[] move = this.pop();
-			Main.board.move(clone, move[0], move[1]);
+		while(!clone.empty()) {
+			int[] move = clone.pop();
+			Main.board.move(this, move[0], move[1]);
 		}
 	}
 	
